@@ -90,6 +90,8 @@ def documentMapping(content, data):
         return extractDrivingLicense(data)
     elif content == 'Passport':
         return extractPassport(data)
+    elif content == 'VoterID':
+        return extractVoterID(data)
 
 # format the existing text
 
@@ -261,55 +263,52 @@ def extractPAN(data):
 
 
 def extractPassport(data):
-    lines = formatdataframe(data, 30)
+    lines = formatdataframe(data, 0)
     print(lines)
-    rgxDate = '^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$'
     rgxPassport = '^[A-Z]{1}[0-9]{7}$'
     data = {}
-    dates = []
     ind = 0
-    passportLine = 0
     for row in lines['text']:
         for item in row:
             item = item.strip()
             if re.search(rgxPassport, item):
                 data['PassportNumber'] = item
-                passportLine = ind
-            if re.search(rgxDate, item):
-                dates.append(item)
         ind += 1
-    # Get Passport Number
-    # passportNumRow = lines.loc[passportLine+1, 'text']
-    # passportNum = ''
-    # for item in passportNumRow:
-    #     item = item.strip()
-    #     if len(item) == 9:
-    #         passportNum += item
-    # data['PassportNumber'] = passportNum
-    # Get Name
-    nameRow = lines.loc[passportLine+2, 'text']
-    name = ''
-    for item in nameRow:
-        item = item.strip()
-        if item.isalpha() and item.isupper():
-            name += item + ' '
-    surnameRow = lines.loc[passportLine+1, 'text']
-    surname = ''
-    for item in surnameRow:
-        item = item.strip()
-        if item.isalpha() and item.isupper():
-            surname += item + ' '
-    data['Name'] = name[:-1] + ' ' + surname[:-1]
-    # data['Name'] = name[:-1]
-    # Get Date of Birth, Date of Issue, Date of Expiry
-    # data['DOB'] = dates[0]
-    # data['DateOfIssue'] = dates[1]
-    # data['DateOfExpiry'] = dates[2]
-    print(data, dates)
+    print(data)
     pass
 
 
 def extractDrivingLicense(data):
+    rgxDL = ("^(([A-Z]{2}[0-9]{2})"+"( )|([A-Z]{2}-[0-9]" +
+             "{2}))((19|20)[0-9]"+"[0-9])[0-9]{7}$")
+    lines = formatdataframe(data, 0)
+    print(lines)
+    data = {}
+    ind = 0
+    for row in lines['text']:
+        for item in row:
+            item = item.strip()
+            if re.search(rgxDL, item):
+                data['DrivingLicenseNumber'] = item
+        ind += 1
+    # if len(data) == 0:
+    #     return
+    print(data)
     pass
 # then output it
 # expose the API
+
+
+def extractVoterID(data):
+    lines = formatdataframe(data, 0)
+    rgxVoterId = '^[A-Z]{3}[0-9]{7}$'
+    data = {}
+    ind = 0
+    for row in lines['text']:
+        for item in row:
+            item = item.strip()
+            if re.search(rgxVoterId, item):
+                data['VoterID'] = item
+        ind += 1
+    print(lines)
+    pass

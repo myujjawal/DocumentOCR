@@ -82,6 +82,8 @@ const UploadFile = () => {
           <option value="AadharBack">AadharBack</option>
           <option value="PAN">PAN</option>
           <option value="Passport">Passport</option>
+          <option value="DrivingLicense">DrivingLicense</option>
+          <option value="VoterID">VoterID</option>
         </select>
         {/* <input
           type="text"
